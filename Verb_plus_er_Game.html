@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verb + er</title>
+<style>
+:root{--bg:#e8f7ff;--card:#fff;--ink:#2b2d42;--r1:#4dabf7;--r2:#ff8787;--r3:#51cf66;--yel:#ffd43b}
+@media (prefers-color-scheme:dark){:root{--bg:#1d2236;--card:#2a3150;--ink:#f1f3ff}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:"Comic Sans MS","Trebuchet MS",system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:12px;min-height:100vh}
+.wrap{max-width:760px;margin:auto;text-align:center}
+.school{font-size:14px;opacity:.75}
+h1{margin:4px 0;font-size:clamp(26px,6vw,40px);color:#f06595}
+.card{background:var(--card);border-radius:22px;padding:16px;margin:12px 0;box-shadow:0 6px 16px #0002}
+.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:480px){.menu{grid-template-columns:1fr}}
+.btn{font:inherit;font-weight:bold;font-size:20px;border:0;border-radius:18px;padding:16px;color:#fff;cursor:pointer;box-shadow:0 6px 0 #0003;transition:.1s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #0003}
+.b1{background:var(--r1)}.b2{background:var(--r2)}.b3{background:var(--r3)}.b4{background:#b197fc}.bg{background:#868e96}
+.rule{border-radius:18px;padding:14px;margin:10px 0;color:#fff;text-align:left;animation:pop .5s both}
+.rule h3{margin:0 0 6px;font-size:22px}
+.rule .ex{font-size:20px;background:#fff3;border-radius:12px;padding:6px 10px;margin:4px 0}
+.rule b{background:#fff;color:#2b2d42;border-radius:6px;padding:0 5px}
+.verb{font-size:clamp(40px,12vw,72px);font-weight:bold;margin:6px;color:#f06595}
+.opts{display:grid;gap:10px;margin-top:10px}
+.opts .btn{font-size:clamp(17px,4.5vw,24px)}
+input.t{font:inherit;font-size:30px;text-align:center;border:4px solid #b197fc;border-radius:16px;padding:10px;width:90%;background:var(--card);color:var(--ink);text-transform:lowercase}
+.top{display:flex;justify-content:space-between;font-weight:bold;font-size:18px}
+.prog{height:14px;background:#dee2e6;border-radius:8px;overflow:hidden;margin:6px 0}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4dabf7,#51cf66);transition:.4s}
+.fb{min-height:60px;font-size:20px;font-weight:bold;margin-top:10px}
+.ok{color:#2f9e44}.no{color:#e03131}
+.shake{animation:shake .45s}.pop{animation:pop .45s}
+@keyframes shake{25%{transform:translateX(-9px)}50%{transform:translateX(9px)}75%{transform:translateX(-5px)}}
+@keyframes pop{0%{transform:scale(.85);opacity:.4}60%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
+.hide{display:none}
+.done{font-size:64px}
+.tip{font-size:16px;background:#fff9db;color:#2b2d42;border-radius:12px;padding:8px;margin-top:8px}
+footer{margin:16px 0;font-size:14px;opacity:.85}
+canvas{position:fixed;inset:0;pointer-events:none;z-index:99}
+.name{font:inherit;padding:8px 12px;border-radius:12px;border:2px solid var(--r1);width:220px;background:var(--card);color:var(--ink)}
+</style></head><body><div class="wrap">
+<div class="school">Khawlah Bint Thalabah (5-9)</div>
+<h1>🌟 Verb + er 🌟</h1>
+<div id="app"></div>
+<footer>Created by T.Badria Alfalahi ❤️🌸</footer>
+</div><canvas id="cv"></canvas>
+<script>
+const R1=['teach','sing','play','work','paint','read','jump','climb','help','listen','visit','farm'];
+const R2=['dance','write','bake','ride','drive','make','hike','smile','race','vote'];
+const R3=['run','swim','shop','win','jog','chat','hit','begin'];
+const ER=v=>R2.includes(v)?v+'r':R3.includes(v)?v+v.slice(-1)+'er':v+'er';
+const ALL=[...R1.map(v=>[v,1]),...R2.map(v=>[v,2]),...R3.map(v=>[v,3])];
+const EMO={teach:'👩‍🏫',sing:'🎤',play:'⚽',work:'👷',paint:'🎨',read:'📖',jump:'🤸',climb:'🧗',help:'🤝',listen:'👂',visit:'🧳',farm:'🚜',dance:'💃',write:'✍️',bake:'🥖',ride:'🏇',drive:'🚗',make:'🔨',hike:'🥾',smile:'😊',race:'🏁',vote:'🗳️',run:'🏃',swim:'🏊',shop:'🛍️',win:'🏆',jog:'👟',chat:'💬',hit:'⚾',begin:'🚀'};
+const app=document.getElementById('app');let ac;
+function snd(f,d=.15,t='sine',v=.15,w=0){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(ac.destination);const s=ac.currentTime+w;o.start(s);g.gain.exponentialRampToValueAtTime(.001,s+d);o.stop(s+d)}catch(e){}}
+const good=()=>[523,659,784].forEach((f,i)=>snd(f,.2,'triangle',.18,i*.08));
+const bad=()=>{snd(200,.25,'sawtooth',.12);snd(150,.3,'sawtooth',.12,.12)};
+const sh=a=>[...a].sort(()=>Math.random()-.5);
+const done={};let name='';
+function confetti(){const cv=document.getElementById('cv'),x=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;const P=[...Array(130)].map(()=>({x:Math.random()*cv.width,y:-20-Math.random()*200,v:2+Math.random()*4,r:4+Math.random()*6,c:`hsl(${Math.random()*360},90%,60%)`,w:Math.random()*6}));let f=0;(function a(){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.y+=p.v;p.x+=Math.sin(p.y/20+p.w);x.fillStyle=p.c;x.fillRect(p.x,p.y,p.r,p.r*1.6)});if(++f<200)requestAnimationFrame(a);else x.clearRect(0,0,cv.width,cv.height)})()}
+function menu(){
+ app.innerHTML=`<div class="card"><input class="name" id="nm" placeholder="Your name" value="${name}"><p>Choose a stage (play in any order) 👇</p>
+ <div class="menu"><button class="btn b1" onclick="learn()">📘 1. Learn the rules ${done.l?'✅':''}</button>
+ <button class="btn b2" onclick="sortG()">🧺 2. Sort the verbs ${done.s?'✅':''}</button>
+ <button class="btn b3" onclick="pickG()">🎯 3. Choose the word ${done.p?'✅':''}</button>
+ <button class="btn b4" onclick="typeG()">⌨️ 4. Type the word ${done.t?'✅':''}</button></div></div>
+ ${Object.keys(done).length==4?'<div class="card pop"><div class="done">🏆</div><h2>Super star'+(name?', '+name:'')+'!</h2><p>You finished all stages!</p></div>':''}`;
+ document.getElementById('nm').oninput=e=>name=e.target.value}
+const back='<button class="btn bg" style="font-size:16px;padding:8px 14px" onclick="menu()">⬅ Menu</button>';
+function learn(){
+ app.innerHTML=`<div class="card">${back}<h2>Verb + er = the person who does it!</h2>
+ <div class="rule" style="background:var(--r1)"><h3>1️⃣ Most verbs: add <b>er</b></h3><div class="ex">teach ➜ teach<b>er</b> 👩‍🏫</div><div class="ex">sing ➜ sing<b>er</b> 🎤</div><div class="ex">play ➜ play<b>er</b> ⚽</div></div>
+ <div class="rule" style="background:var(--r2);animation-delay:.2s"><h3>2️⃣ Verb ends with <b>e</b>: add only <b>r</b></h3><div class="ex">dance ➜ dance<b>r</b> 💃</div><div class="ex">write ➜ write<b>r</b> ✍️</div><div class="ex">bake ➜ bake<b>r</b> 🥖</div></div>
+ <div class="rule" style="background:var(--r3);animation-delay:.4s"><h3>3️⃣ Short verb (consonant + vowel + consonant): double the last letter, then add <b>er</b></h3><div class="ex">run ➜ ru<b>nn</b>er 🏃</div><div class="ex">swim ➜ swi<b>mm</b>er 🏊</div><div class="ex">shop ➜ sho<b>pp</b>er 🛍️</div></div>
+ <div class="tip">⚠️ We don't double w, x, y: play ➜ player</div>
+ <br><button class="btn b4" onclick="done.l=1;good();menu()">I understand! ✔</button></div>`;good()}
+function sortG(){
+ const q=sh(ALL).slice(0,12);let i=0,s=0;
+ function show(){
+  if(i>=q.length)return fin('Sort the verbs',s,q.length,'s');
+  const [v]=q[i];
+  app.innerHTML=`<div class="card">${back}<div class="top"><span>Question ${i+1}/${q.length}</span><span>⭐ ${s}</span></div><div class="prog"><i style="width:${i/q.length*100}%"></i></div>
+  <p>Which rule? (verb ➜ person)</p><div class="verb pop">${EMO[v]} ${v}</div>
+  <div class="opts"><button class="btn b1" onclick="A(1)">1️⃣ add er</button><button class="btn b2" onclick="A(2)">2️⃣ add r (ends with e)</button><button class="btn b3" onclick="A(3)">3️⃣ double + er</button></div><div class="fb" id="fb"></div></div>`}
+ window.A=n=>{const [v,r]=q[i];const fb=document.getElementById('fb');document.querySelectorAll('.opts .btn').forEach(b=>b.disabled=true);
+  if(n===r){s++;good();fb.innerHTML=`<span class="ok">✔ Yes! ${v} ➜ ${ER(v)}</span>`}else{bad();document.querySelector('.verb').classList.add('shake');fb.innerHTML=`<span class="no">✘ Rule ${r}: ${v} ➜ ${ER(v)}</span>`}
+  setTimeout(()=>{i++;show()},1500)};
+ show()}
+function pickG(){
+ const q=sh(ALL).slice(0,10);let i=0,s=0;
+ function mk(v){const e=ER(v);const w=new Set([e,v+'er',v+'r',v+v.slice(-1)+'er',v.replace(/e$/,'')+'er']);w.delete('');return sh([...w].filter(x=>x===e||x!==e)).slice(0,4).includes(e)?sh([...w]).slice(0,4):sh([e,...[...w].filter(x=>x!==e).slice(0,3)])}
+ function show(){
+  if(i>=q.length)return fin('Choose the word',s,q.length,'p');
+  const [v]=q[i];let o=mk(v);if(!o.includes(ER(v)))o[0]=ER(v);o=sh(o);
+  app.innerHTML=`<div class="card">${back}<div class="top"><span>Question ${i+1}/${q.length}</span><span>⭐ ${s}</span></div><div class="prog"><i style="width:${i/q.length*100}%"></i></div>
+  <p>A person who can <b>${v}</b> is a ...</p><div class="verb pop">${EMO[v]}</div>
+  <div class="opts">${o.map(x=>`<button class="btn ${['b1','b2','b3','b4'][Math.floor(Math.random()*4)]}" onclick="P('${x}',this)">${x}</button>`).join('')}</div><div class="fb" id="fb"></div></div>`}
+ window.P=(x,b)=>{const [v,r]=q[i];const fb=document.getElementById('fb');document.querySelectorAll('.opts .btn').forEach(k=>k.disabled=true);
+  if(x===ER(v)){s++;good();fb.innerHTML=`<span class="ok">✔ ${v} ➜ ${ER(v)}</span>`}else{bad();b.classList.add('shake');fb.innerHTML=`<span class="no">✘ Correct: ${ER(v)}</span><div class="tip">${r==1?'Rule 1: add er':r==2?'Rule 2: ends with e, add only r':'Rule 3: double the last letter + er'}</div>`}
+  setTimeout(()=>{i++;show()},x===ER(v)?1200:2200)};
+ show()}
+function typeG(){
+ const q=sh(ALL).slice(0,8);let i=0,s=0;
+ function show(){
+  if(i>=q.length)return fin('Type the word',s,q.length,'t');
+  const [v]=q[i];
+  app.innerHTML=`<div class="card">${back}<div class="top"><span>Question ${i+1}/${q.length}</span><span>⭐ ${s}</span></div><div class="prog"><i style="width:${i/q.length*100}%"></i></div>
+  <p>Write the person word:</p><div class="verb pop">${EMO[v]} ${v} ➜ ?</div>
+  <input class="t" id="in" autocomplete="off" autocapitalize="off" spellcheck="false"><br><br><button class="btn b3" id="ck">Check ✔</button><div class="fb" id="fb"></div></div>`;
+  const inp=document.getElementById('in');inp.focus();
+  const go=()=>{const a=inp.value.trim().toLowerCase();if(!a)return;const fb=document.getElementById('fb');document.getElementById('ck').disabled=true;inp.disabled=true;
+   if(a===ER(v)){s++;good();fb.innerHTML=`<span class="ok">✔ ${ER(v)}</span>`}else{bad();inp.classList.add('shake');fb.innerHTML=`<span class="no">✘ Correct: ${ER(v)}</span>`}
+   setTimeout(()=>{i++;show()},1600)};
+  document.getElementById('ck').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()}}
+ show()}
+function fin(t,s,n,k){
+ const pc=s/n;if(pc>=.7){done[k]=1;confetti();good()}
+ app.innerHTML=`<div class="card pop"><div class="done">${pc>=.9?'🏆':pc>=.7?'🌟':'💪'}</div><h2>${t}</h2><h1>${s} / ${n}</h1><div>${'⭐'.repeat(Math.round(pc*5))}</div>
+ <p>${pc>=.9?'Amazing'+(name?', '+name:'')+'!':pc>=.7?'Great job!':'Good try! Learn the rules and play again.'}</p>
+ <button class="btn b1" onclick="${{s:'sortG',p:'pickG',t:'typeG'}[k]}()">🔄 Play again</button> <button class="btn bg" onclick="menu()">Menu</button></div>`}
+menu();
+</script></body></html>
